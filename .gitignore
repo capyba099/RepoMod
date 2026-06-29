@@ -1,0 +1,8 @@
+extracted/
+bin/
+obj/
+plugins/
+package/
+*.user
+*.suo
+.DS_Store
