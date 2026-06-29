@@ -32,7 +32,7 @@ jobs:
         run: echo "value=$(grep -oP '(?<=<Version>)[^<]+' RepoSpinTeleportMod.csproj | head -1)" >> "$GITHUB_OUTPUT"
 
       - name: Build
-        run: dotnet build -c Release --no-restore false
+        run: dotnet build -c Release
         env:
           CI: true
 
