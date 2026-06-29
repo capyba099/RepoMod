@@ -9,7 +9,22 @@ internal static class SpinTeleportLogic
     internal const float TeleportIntervalSeconds = 1f;
     internal const float TeleportHeightOffset = 0.15f;
 
-    internal static bool CanSpin(PlayerAvatarVisuals visuals)
+    internal static bool ModifyingNetworkRotation { get; set; }
+
+    private static float _spinAngle;
+
+    internal static Quaternion CurrentSpinRotation => Quaternion.Euler(0f, _spinAngle, 0f);
+
+    internal static void AdvanceSpin()
+    {
+        _spinAngle += SpinSpeedDegreesPerSecond * Time.deltaTime;
+        if (_spinAngle >= 360f)
+        {
+            _spinAngle -= 360f;
+        }
+    }
+
+    internal static bool IsLocalVisuals(PlayerAvatarVisuals visuals)
     {
         if (visuals == null || visuals.isMenuAvatar)
         {
@@ -17,12 +32,9 @@ internal static class SpinTeleportLogic
         }
 
         PlayerAvatar localAvatar = PlayerAvatar.instance;
-        if (localAvatar == null || !localAvatar.isLocal)
-        {
-            return false;
-        }
-
-        return visuals.playerAvatar == localAvatar;
+        return localAvatar != null
+            && localAvatar.isLocal
+            && localAvatar.playerAvatarVisuals == visuals;
     }
 
     internal static bool CanTeleport()
@@ -32,12 +44,37 @@ internal static class SpinTeleportLogic
 
     internal static void ApplySpin(PlayerAvatarVisuals visuals)
     {
-        if (!CanSpin(visuals))
+        if (!IsLocalVisuals(visuals))
         {
             return;
         }
 
-        visuals.transform.Rotate(0f, SpinSpeedDegreesPerSecond * Time.deltaTime, 0f, Space.World);
+        AdvanceSpin();
+
+        visuals.ShowSelfOverride(0.25f);
+
+        if (visuals.meshParent != null)
+        {
+            visuals.meshParent.transform.Rotate(0f, SpinSpeedDegreesPerSecond * Time.deltaTime, 0f, Space.Self);
+        }
+    }
+
+    internal static void ApplyAvatarSpin(PlayerAvatar avatar)
+    {
+        if (avatar == null || !avatar.isLocal)
+        {
+            return;
+        }
+
+        if (avatar.playerAvatarVisuals != null)
+        {
+            ApplySpin(avatar.playerAvatarVisuals);
+        }
+    }
+
+    internal static Quaternion ApplySpinToRotation(Quaternion rotation)
+    {
+        return rotation * CurrentSpinRotation;
     }
 
     internal static void TeleportToNextPlayer(ref int targetIndex)

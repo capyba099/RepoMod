@@ -1,6 +1,6 @@
 {
   "name": "Spin_Teleport_Mod",
-  "version_number": "1.1.0",
+  "version_number": "1.1.1",
   "website_url": "https://github.com/capyba099/RepoMod",
   "description": "Your player model always spins fast and teleports to each player on the map every second.",
   "dependencies": [

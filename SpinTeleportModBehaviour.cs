@@ -22,6 +22,11 @@ internal sealed class SpinTeleportModBehaviour : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        SpinTeleportLogic.ApplyAvatarSpin(PlayerAvatar.instance);
+    }
+
     private IEnumerator TeleportLoop()
     {
         WaitForSeconds wait = new WaitForSeconds(SpinTeleportLogic.TeleportIntervalSeconds);
