@@ -23,8 +23,11 @@
 
 ### Скачать готовый плагин
 
-- **DLL:** [BepInEx/plugins/SpinTeleportMod/RepoSpinTeleportMod.dll](BepInEx/plugins/SpinTeleportMod/RepoSpinTeleportMod.dll)
-- **Манифест:** [BepInEx/plugins/SpinTeleportMod/manifest.json](BepInEx/plugins/SpinTeleportMod/manifest.json)
+**Рекомендуется:** скачайте последний `.dll` из [Releases](https://github.com/capyba099/RepoMod/releases/latest).
+
+- **DLL (релиз):** [последний релиз](https://github.com/capyba099/RepoMod/releases/latest/download/RepoSpinTeleportMod.dll)
+- **ZIP (релиз):** [последний архив](https://github.com/capyba099/RepoMod/releases/latest)
+- **DLL (в репозитории):** [BepInEx/plugins/SpinTeleportMod/RepoSpinTeleportMod.dll](BepInEx/plugins/SpinTeleportMod/RepoSpinTeleportMod.dll)
 
 ### Сборка из исходников
 
