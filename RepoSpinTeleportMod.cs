@@ -42,5 +42,5 @@ internal static class PluginInfo
 {
     public const string GUID = "RepoMod.RepoSpinTeleportMod";
     public const string NAME = "Spin Teleport Mod";
-    public const string VERSION = "1.0.0";
+    public const string VERSION = "1.1.0";
 }

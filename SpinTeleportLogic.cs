@@ -9,39 +9,30 @@ internal static class SpinTeleportLogic
     internal const float TeleportIntervalSeconds = 1f;
     internal const float TeleportHeightOffset = 0.15f;
 
-    internal static bool IsActive()
+    internal static bool CanSpin(PlayerAvatarVisuals visuals)
     {
-        if (PlayerAvatar.instance == null || !PlayerAvatar.instance.isLocal)
+        if (visuals == null || visuals.isMenuAvatar)
         {
             return false;
         }
 
-        if (LevelGenerator.Instance == null || !LevelGenerator.Instance.Generated)
+        PlayerAvatar localAvatar = PlayerAvatar.instance;
+        if (localAvatar == null || !localAvatar.isLocal)
         {
             return false;
         }
 
-        if (SemiFunc.MenuLevel())
-        {
-            return false;
-        }
+        return visuals.playerAvatar == localAvatar;
+    }
 
-        if (GameDirector.instance == null || GameDirector.instance.currentState != GameDirector.gameState.Main)
-        {
-            return false;
-        }
-
-        if (PlayerAvatar.instance.isDisabled)
-        {
-            return false;
-        }
-
-        return true;
+    internal static bool CanTeleport()
+    {
+        return PlayerAvatar.instance != null && PlayerAvatar.instance.isLocal;
     }
 
     internal static void ApplySpin(PlayerAvatarVisuals visuals)
     {
-        if (!IsActive() || visuals.playerAvatar != PlayerAvatar.instance)
+        if (!CanSpin(visuals))
         {
             return;
         }
@@ -51,17 +42,22 @@ internal static class SpinTeleportLogic
 
     internal static void TeleportToNextPlayer(ref int targetIndex)
     {
-        if (!IsActive())
+        if (!CanTeleport())
         {
             return;
         }
 
         List<PlayerAvatar> players = SemiFunc.PlayerGetList();
+        if (players == null || players.Count == 0)
+        {
+            return;
+        }
+
         List<PlayerAvatar> targets = new List<PlayerAvatar>();
 
         foreach (PlayerAvatar player in players)
         {
-            if (player == null || player.isDisabled || player == PlayerAvatar.instance)
+            if (player == null || player == PlayerAvatar.instance)
             {
                 continue;
             }
@@ -89,22 +85,35 @@ internal static class SpinTeleportLogic
     private static void TeleportLocalPlayer(Vector3 position)
     {
         PlayerAvatar avatar = PlayerAvatar.instance;
-        PlayerController controller = PlayerController.instance;
-
-        controller.transform.position = position;
-        controller.rb.velocity = Vector3.zero;
-        controller.rb.angularVelocity = Vector3.zero;
 
         avatar.transform.position = position;
         avatar.clientPosition = position;
         avatar.clientPositionCurrent = position;
-        avatar.rb.velocity = Vector3.zero;
-        avatar.rb.angularVelocity = Vector3.zero;
+
+        if (avatar.rb != null)
+        {
+            avatar.rb.velocity = Vector3.zero;
+            avatar.rb.angularVelocity = Vector3.zero;
+            avatar.rb.MovePosition(position);
+        }
 
         if (avatar.playerAvatarVisuals != null)
         {
             avatar.playerAvatarVisuals.visualPosition = position;
             avatar.playerAvatarVisuals.transform.position = position;
+        }
+
+        if (PlayerController.instance != null)
+        {
+            PlayerController controller = PlayerController.instance;
+            controller.transform.position = position;
+
+            if (controller.rb != null)
+            {
+                controller.rb.velocity = Vector3.zero;
+                controller.rb.angularVelocity = Vector3.zero;
+                controller.rb.MovePosition(position);
+            }
         }
 
         if (avatar.localCamera != null)

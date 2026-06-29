@@ -5,7 +5,7 @@
     <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>RepoMod</Authors>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -31,7 +31,9 @@
 
   <ItemGroup>
     <Compile Remove="extracted/**" />
+    <Compile Remove="plugins/**" />
     <None Include="extracted/**" />
+    <None Include="plugins/**" />
   </ItemGroup>
 
 </Project>

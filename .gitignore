@@ -1,7 +1,7 @@
 extracted/
 bin/
 obj/
-plugins/
+/plugins/
 package/
 *.user
 *.suo
